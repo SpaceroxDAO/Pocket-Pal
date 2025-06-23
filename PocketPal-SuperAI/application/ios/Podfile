@@ -14,8 +14,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-# Enable Firebase as a static framework
-$RNFirebaseAsStaticFramework = true
+# Firebase removed - privacy-first approach
 
 ENV['RCT_NEW_ARCH_ENABLED'] = '0'
 
@@ -33,11 +32,7 @@ target 'PocketPal' do
     # Pods for testing
   end
 
-  # Firebase (App Check)
-  pod 'Firebase', :modular_headers => true
-  pod 'FirebaseCore', :modular_headers => true
-  pod 'FirebaseAppCheck', :modular_headers => true
-  pod 'GoogleUtilities', :modular_headers => true
+  # Firebase removed - following sultanqasim optimization patterns
 
   # Uncomment this line if you're not using auto-linking or if auto-linking causes trouble
   # pod 'WatermelonDB', path: '../node_modules/@nozbe/watermelondb'
@@ -58,6 +53,15 @@ target 'PocketPal' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+    
+    # Fix deployment target warnings
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 12.0
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
+        end
+      end
+    end
   end
 
 
