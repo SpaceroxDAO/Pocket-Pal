@@ -1,0 +1,14 @@
+import { PreviewData, PreviewDataImage, Size } from './types';
+export declare const getActualImageUrl: (baseUrl: string, imageUrl?: string | undefined) => string | undefined;
+export declare const getHtmlEntitiesDecodedText: (text?: string | undefined) => string | undefined;
+export declare const getContent: (left: string, right: string, type: string) => string;
+export declare const getImageSize: (url: string) => Promise<Size>;
+export declare const getPreviewData: (text: string, requestTimeout?: number) => Promise<PreviewData>;
+export declare const getPreviewDataImage: (url?: string | undefined) => Promise<PreviewDataImage | undefined>;
+export declare const oneOf: <T extends (...args: A) => any, U, A extends any[]>(truthy: T | undefined, falsy: U) => (...args: Parameters<T>) => U | ReturnType<T>;
+export declare const REGEX_EMAIL: RegExp;
+export declare const REGEX_IMAGE_CONTENT_TYPE: RegExp;
+export declare const REGEX_IMAGE_TAG: RegExp;
+export declare const REGEX_LINK: RegExp;
+export declare const REGEX_META: RegExp;
+export declare const REGEX_TITLE: RegExp;
