@@ -27,6 +27,9 @@ target 'PocketPal' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  # MediaPipe for RAG embeddings - following TIC-13 proven patterns
+  pod 'MediaPipeTasksText', '~> 0.10.14'
+
   target 'PocketPalTests' do
     inherit! :complete
     # Pods for testing

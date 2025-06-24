@@ -8,17 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* PocketPalTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* PocketPalTests.m */; };
+		0BB6C143FA578544847975A3 /* libPods-PocketPal-PocketPalTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FE7219288D1279C8FCC5C0F /* libPods-PocketPal-PocketPalTests.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1C5077855E738169D7580281 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 56D1BD968C32BD43D7C02874 /* PrivacyInfo.xcprivacy */; };
-		4765E4512DE005AE01313A52 /* libPods-PocketPal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 974BF0F3B02FF03661A710DF /* libPods-PocketPal.a */; };
+		302C9F142E09F9B600EBCDA3 /* bert_embedder.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 302C9F132E09F9B600EBCDA3 /* bert_embedder.tflite */; };
+		305F36272E0992CD006A4720 /* RagModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 305F36262E0992CD006A4720 /* RagModule.m */; };
+		44C35CC4CC0DB3DA5B4F5A67 /* libPods-PocketPal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 82D070ADB010DC652B0BAE4D /* libPods-PocketPal.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A85081982D6255F000BDE4BC /* KeepAwakeModule.h in Sources */ = {isa = PBXBuildFile; fileRef = A85081962D6255F000BDE4BC /* KeepAwakeModule.h */; };
 		A85081992D6255F000BDE4BC /* KeepAwakeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A85081972D6255F000BDE4BC /* KeepAwakeModule.m */; };
 		A88DF87F2D0B6F7400239E77 /* DeviceInfoModule.h in Sources */ = {isa = PBXBuildFile; fileRef = A88DF87D2D0B6F7400239E77 /* DeviceInfoModule.h */; };
 		A88DF8802D0B6F7400239E77 /* DeviceInfoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A88DF87E2D0B6F7400239E77 /* DeviceInfoModule.m */; };
-		B5EFA46DD7703C74508B3C19 /* libPods-PocketPal-PocketPalTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B582BBA4972C8A5A896B085D /* libPods-PocketPal-PocketPalTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,24 +37,27 @@
 		00E356EE1AD99517003FC87E /* PocketPalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PocketPalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* PocketPalTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PocketPalTests.m; sourceTree = "<group>"; };
-		0CC2F09E1EC95E4DD0A4CB3E /* Pods-PocketPal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PocketPal.release.xcconfig"; path = "Target Support Files/Pods-PocketPal/Pods-PocketPal.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* PocketPal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketPal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = PocketPal/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = PocketPal/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = PocketPal/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PocketPal/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = PocketPal/main.m; sourceTree = "<group>"; };
+		19C1F197D8D7DECDF092AD33 /* Pods-PocketPal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PocketPal.debug.xcconfig"; path = "Target Support Files/Pods-PocketPal/Pods-PocketPal.debug.xcconfig"; sourceTree = "<group>"; };
+		2FE7219288D1279C8FCC5C0F /* libPods-PocketPal-PocketPalTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PocketPal-PocketPalTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		302C9F132E09F9B600EBCDA3 /* bert_embedder.tflite */ = {isa = PBXFileReference; lastKnownFileType = file; path = bert_embedder.tflite; sourceTree = "<group>"; };
+		305F36252E0992CD006A4720 /* RagModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RagModule.h; path = PocketPal/RagModule.h; sourceTree = "<group>"; };
+		305F36262E0992CD006A4720 /* RagModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RagModule.m; path = PocketPal/RagModule.m; sourceTree = "<group>"; };
 		56D1BD968C32BD43D7C02874 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = PocketPal/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		6A3ED31E67D7050FB6A30BA9 /* Pods-PocketPal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PocketPal.debug.xcconfig"; path = "Target Support Files/Pods-PocketPal/Pods-PocketPal.debug.xcconfig"; sourceTree = "<group>"; };
-		806429FF9993B5E5D05298A2 /* Pods-PocketPal-PocketPalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PocketPal-PocketPalTests.debug.xcconfig"; path = "Target Support Files/Pods-PocketPal-PocketPalTests/Pods-PocketPal-PocketPalTests.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PocketPal/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		974BF0F3B02FF03661A710DF /* libPods-PocketPal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PocketPal.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		82D070ADB010DC652B0BAE4D /* libPods-PocketPal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PocketPal.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C6F39A851ECED8951B7BBD6 /* Pods-PocketPal-PocketPalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PocketPal-PocketPalTests.release.xcconfig"; path = "Target Support Files/Pods-PocketPal-PocketPalTests/Pods-PocketPal-PocketPalTests.release.xcconfig"; sourceTree = "<group>"; };
 		A85081962D6255F000BDE4BC /* KeepAwakeModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KeepAwakeModule.h; path = PocketPal/KeepAwakeModule.h; sourceTree = "<group>"; };
 		A85081972D6255F000BDE4BC /* KeepAwakeModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = KeepAwakeModule.m; path = PocketPal/KeepAwakeModule.m; sourceTree = "<group>"; };
 		A88DF87D2D0B6F7400239E77 /* DeviceInfoModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DeviceInfoModule.h; path = PocketPal/DeviceInfoModule.h; sourceTree = "<group>"; };
 		A88DF87E2D0B6F7400239E77 /* DeviceInfoModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DeviceInfoModule.m; path = PocketPal/DeviceInfoModule.m; sourceTree = "<group>"; };
-		A8D7E776DCA73C3989BE17FC /* Pods-PocketPal-PocketPalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PocketPal-PocketPalTests.release.xcconfig"; path = "Target Support Files/Pods-PocketPal-PocketPalTests/Pods-PocketPal-PocketPalTests.release.xcconfig"; sourceTree = "<group>"; };
-		B582BBA4972C8A5A896B085D /* libPods-PocketPal-PocketPalTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PocketPal-PocketPalTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3474DC96C496747307799B7 /* Pods-PocketPal-PocketPalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PocketPal-PocketPalTests.debug.xcconfig"; path = "Target Support Files/Pods-PocketPal-PocketPalTests/Pods-PocketPal-PocketPalTests.debug.xcconfig"; sourceTree = "<group>"; };
+		E2F17FB5C54AAC3CE1B91510 /* Pods-PocketPal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PocketPal.release.xcconfig"; path = "Target Support Files/Pods-PocketPal/Pods-PocketPal.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F6E78A942BFFAF1A00968174 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		F6FDF0F62BF10215004D619B /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -63,7 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5EFA46DD7703C74508B3C19 /* libPods-PocketPal-PocketPalTests.a in Frameworks */,
+				0BB6C143FA578544847975A3 /* libPods-PocketPal-PocketPalTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,7 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4765E4512DE005AE01313A52 /* libPods-PocketPal.a in Frameworks */,
+				44C35CC4CC0DB3DA5B4F5A67 /* libPods-PocketPal.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,8 +121,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				974BF0F3B02FF03661A710DF /* libPods-PocketPal.a */,
-				B582BBA4972C8A5A896B085D /* libPods-PocketPal-PocketPalTests.a */,
+				82D070ADB010DC652B0BAE4D /* libPods-PocketPal.a */,
+				2FE7219288D1279C8FCC5C0F /* libPods-PocketPal-PocketPalTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -132,6 +137,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				302C9F132E09F9B600EBCDA3 /* bert_embedder.tflite */,
+				305F36252E0992CD006A4720 /* RagModule.h */,
+				305F36262E0992CD006A4720 /* RagModule.m */,
 				A85081962D6255F000BDE4BC /* KeepAwakeModule.h */,
 				A85081972D6255F000BDE4BC /* KeepAwakeModule.m */,
 				13B07FAE1A68108700A75B9A /* PocketPal */,
@@ -158,10 +166,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				6A3ED31E67D7050FB6A30BA9 /* Pods-PocketPal.debug.xcconfig */,
-				0CC2F09E1EC95E4DD0A4CB3E /* Pods-PocketPal.release.xcconfig */,
-				806429FF9993B5E5D05298A2 /* Pods-PocketPal-PocketPalTests.debug.xcconfig */,
-				A8D7E776DCA73C3989BE17FC /* Pods-PocketPal-PocketPalTests.release.xcconfig */,
+				19C1F197D8D7DECDF092AD33 /* Pods-PocketPal.debug.xcconfig */,
+				E2F17FB5C54AAC3CE1B91510 /* Pods-PocketPal.release.xcconfig */,
+				C3474DC96C496747307799B7 /* Pods-PocketPal-PocketPalTests.debug.xcconfig */,
+				8C6F39A851ECED8951B7BBD6 /* Pods-PocketPal-PocketPalTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -182,12 +190,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "PocketPalTests" */;
 			buildPhases = (
-				0075B9318F22130BCD3D83DB /* [CP] Check Pods Manifest.lock */,
+				FC8A9B1E6FE7E47240ABF665 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				DAE174D48C88209ECA76DB70 /* [CP] Embed Pods Frameworks */,
-				B91A8574BB45D8E41AFD1ABE /* [CP] Copy Pods Resources */,
+				E73599FA61BC19C636885080 /* [CP] Embed Pods Frameworks */,
+				3B71E94846C18E3B1F27B9F6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -203,13 +211,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "PocketPal" */;
 			buildPhases = (
-				10B29AC4BAB73689F5F5A6B8 /* [CP] Check Pods Manifest.lock */,
+				E1B3DF537CA7C0EC55908B0F /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				0D21072470631B2A77535BE8 /* [CP] Embed Pods Frameworks */,
-				9B553F4F0DBE564B36C025AD /* [CP] Copy Pods Resources */,
+				A40194F3D1545F61EF97BCC3 /* [CP] Embed Pods Frameworks */,
+				9BEF9C9214A94BD1BDD5A120 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -269,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				302C9F142E09F9B600EBCDA3 /* bert_embedder.tflite in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				1C5077855E738169D7580281 /* PrivacyInfo.xcprivacy in Resources */,
 			);
@@ -277,28 +286,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0075B9318F22130BCD3D83DB /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-PocketPal-PocketPalTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -315,7 +302,41 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		0D21072470631B2A77535BE8 /* [CP] Embed Pods Frameworks */ = {
+		3B71E94846C18E3B1F27B9F6 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PocketPal-PocketPalTests/Pods-PocketPal-PocketPalTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PocketPal-PocketPalTests/Pods-PocketPal-PocketPalTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PocketPal-PocketPalTests/Pods-PocketPal-PocketPalTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9BEF9C9214A94BD1BDD5A120 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PocketPal/Pods-PocketPal-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PocketPal/Pods-PocketPal-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PocketPal/Pods-PocketPal-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A40194F3D1545F61EF97BCC3 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -332,7 +353,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PocketPal/Pods-PocketPal-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		10B29AC4BAB73689F5F5A6B8 /* [CP] Check Pods Manifest.lock */ = {
+		E1B3DF537CA7C0EC55908B0F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -354,41 +375,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9B553F4F0DBE564B36C025AD /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PocketPal/Pods-PocketPal-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PocketPal/Pods-PocketPal-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PocketPal/Pods-PocketPal-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B91A8574BB45D8E41AFD1ABE /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PocketPal-PocketPalTests/Pods-PocketPal-PocketPalTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PocketPal-PocketPalTests/Pods-PocketPal-PocketPalTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PocketPal-PocketPalTests/Pods-PocketPal-PocketPalTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DAE174D48C88209ECA76DB70 /* [CP] Embed Pods Frameworks */ = {
+		E73599FA61BC19C636885080 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -403,6 +390,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PocketPal-PocketPalTests/Pods-PocketPal-PocketPalTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FC8A9B1E6FE7E47240ABF665 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PocketPal-PocketPalTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -421,6 +430,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A85081982D6255F000BDE4BC /* KeepAwakeModule.h in Sources */,
+				305F36272E0992CD006A4720 /* RagModule.m in Sources */,
 				A85081992D6255F000BDE4BC /* KeepAwakeModule.m in Sources */,
 				A88DF87F2D0B6F7400239E77 /* DeviceInfoModule.h in Sources */,
 				A88DF8802D0B6F7400239E77 /* DeviceInfoModule.m in Sources */,
@@ -442,7 +452,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 806429FF9993B5E5D05298A2 /* Pods-PocketPal-PocketPalTests.debug.xcconfig */;
+			baseConfigurationReference = C3474DC96C496747307799B7 /* Pods-PocketPal-PocketPalTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CURRENT_PROJECT_VERSION = 81;
@@ -472,7 +482,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A8D7E776DCA73C3989BE17FC /* Pods-PocketPal-PocketPalTests.release.xcconfig */;
+			baseConfigurationReference = 8C6F39A851ECED8951B7BBD6 /* Pods-PocketPal-PocketPalTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -499,7 +509,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6A3ED31E67D7050FB6A30BA9 /* Pods-PocketPal.debug.xcconfig */;
+			baseConfigurationReference = 19C1F197D8D7DECDF092AD33 /* Pods-PocketPal.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -546,7 +556,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0CC2F09E1EC95E4DD0A4CB3E /* Pods-PocketPal.release.xcconfig */;
+			baseConfigurationReference = E2F17FB5C54AAC3CE1B91510 /* Pods-PocketPal.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

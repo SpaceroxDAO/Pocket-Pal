@@ -32,6 +32,9 @@ PODS:
   - hermes-engine/Pre-built (0.76.3)
   - llama-rn (0.6.0-rc.5):
     - React-Core
+  - MediaPipeTasksCommon (0.10.21)
+  - MediaPipeTasksText (0.10.21):
+    - MediaPipeTasksCommon (= 0.10.21)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1949,6 +1952,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - "llama-rn (from `../node_modules/@pocketpalai/llama.rn`)"
+  - MediaPipeTasksText (~> 0.10.14)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -2036,6 +2040,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - MediaPipeTasksCommon
+    - MediaPipeTasksText
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2233,6 +2239,8 @@ SPEC CHECKSUMS:
   glog: 08b301085f15bcbb6ff8632a8ebaf239aae04e6a
   hermes-engine: 0555a84ea495e8e3b4bde71b597cd87fbb382888
   llama-rn: 36f2ce3b2492f2d12f09c4627d3f5ee369e7f0dc
+  MediaPipeTasksCommon: 6cfa29170d4900f04d250ad95ec058f14a741f38
+  MediaPipeTasksText: aa2536ed8c9b44cccc08eb2620fc48ad17121ac9
   RCT-Folly: 84578c8756030547307e4572ab1947de1685c599
   RCTDeprecation: 2c5e1000b04ab70b53956aa498bf7442c3c6e497
   RCTRequired: 5f785a001cf68a551c5f5040fb4c415672dbb481
@@ -2317,6 +2325,6 @@ SPEC CHECKSUMS:
   WatermelonDB: 75e467adbaf2cb2809780fb3eda7ce4964e11778
   Yoga: 3deb2471faa9916c8a82dda2a22d3fba2620ad37
 
-PODFILE CHECKSUM: 6d93653538ab6d28aeeea02c05d5cb0623bab7e9
+PODFILE CHECKSUM: 9bad2ed91e83b0bfb1de126fcedf73c18debef5b
 
 COCOAPODS: 1.16.2
