@@ -6,7 +6,7 @@ import {chatSessionRepository} from '../repositories/ChatSessionRepository';
 
 import {randId} from '../utils';
 import {L10nContext} from '../utils';
-import {chatSessionStore, modelStore, palStore, uiStore} from '../store';
+import {chatSessionStore, modelStore, palStore, uiStore, mcpStore} from '../store';
 import {createMultimodalWarning} from '../utils/errors';
 
 import {MessageType, User} from '../utils/types';
@@ -16,6 +16,11 @@ import {
   toApiCompletionParams,
   CompletionParams,
 } from '../utils/completionTypes';
+import {
+  buildSystemPromptWithTools,
+  parseToolCalls,
+  formatToolResult,
+} from '../utils/toolParser';
 
 // Helper function to prepare completion parameters using OpenAI-compatible messages API
 const prepareCompletion = async ({
@@ -343,7 +348,7 @@ export const useChatSession = (
       }
 
       // Prefer custom system prompt, fall back to template's system prompt
-      const finalSystemPrompt =
+      let finalSystemPrompt =
         systemPrompt ||
         modelStore.activeModel?.chatTemplate?.systemPrompt ||
         '';
@@ -351,6 +356,14 @@ export const useChatSession = (
       if (finalSystemPrompt?.trim() === '') {
         return [];
       }
+
+      // Enhance system prompt with MCP tool schemas if tools are available
+      const availableTools = toJS(mcpStore.tools);
+      if (availableTools && availableTools.length > 0) {
+        console.log('[useChatSession] Enhancing system prompt with', availableTools.length, 'tools');
+        finalSystemPrompt = buildSystemPromptWithTools(finalSystemPrompt, availableTools);
+      }
+
       return [
         {
           role: 'system' as 'system',
@@ -396,6 +409,67 @@ export const useChatSession = (
       // Just wait for the queue to finish processing
       while (tokenQueue.current.length > 0 || isProcessingTokens.current) {
         await new Promise(resolve => setTimeout(resolve, 50));
+      }
+
+      // Check for tool calls in the completed message
+      const completedMessage = chatSessionStore.currentSessionMessages.find(
+        msg => msg.id === currentMessageInfo.current?.id,
+      );
+
+      if (completedMessage && completedMessage.text) {
+        const toolCalls = parseToolCalls(completedMessage.text);
+
+        if (toolCalls.length > 0) {
+          console.log('[useChatSession] Detected', toolCalls.length, 'tool call(s)');
+
+          // Execute each tool call
+          for (const toolCall of toolCalls) {
+            try {
+              console.log('[useChatSession] Executing tool:', toolCall.name, toolCall.arguments);
+
+              // Execute the tool via MCPStore
+              const result = await mcpStore.activeClient?.callTool(
+                toolCall.name,
+                toolCall.arguments,
+              );
+
+              // Format and inject the tool result
+              const formattedResult = formatToolResult(toolCall.name, result);
+              console.log('[useChatSession] Tool result:', formattedResult);
+
+              // Add tool result as a system-style message (using assistant author)
+              await chatSessionStore.addMessageToCurrentSession({
+                id: randId(),
+                author: assistant,
+                type: 'text',
+                text: formattedResult,
+                createdAt: Date.now(),
+              });
+            } catch (error) {
+              console.error('[useChatSession] Tool execution error:', error);
+              const errorMsg = error instanceof Error ? error.message : 'Tool execution failed';
+
+              // Add error message
+              await chatSessionStore.addMessageToCurrentSession({
+                id: randId(),
+                author: assistant,
+                type: 'text',
+                text: `[TOOL_ERROR(${toolCall.name}): ${errorMsg}]`,
+                createdAt: Date.now(),
+              });
+            }
+          }
+
+          // Continue generation with tool results in context
+          console.log('[useChatSession] Continuing generation with tool results...');
+          modelStore.setInferencing(false);
+          modelStore.setIsStreaming(false);
+          chatSessionStore.setIsGenerating(false);
+
+          // Recursively call handleSubmit with empty message to continue generation
+          await handleSubmit('');
+          return; // Exit early, the recursive call will handle completion
+        }
       }
 
       // Update only the metadata in the database
