@@ -7,6 +7,7 @@ import {makePersistable} from 'mobx-persist-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MCPClient, MCPTool} from '../services/mcp/MCPClient';
 import {MessageType} from '../utils/types';
+import {assistant} from '../utils/chat';
 
 export interface MCPServer {
   id: string;
@@ -191,9 +192,10 @@ class MCPStore {
 
     try {
       // Add system message showing tool call
-      const argsMessage: MessageType.System = {
+      const argsMessage: MessageType.Text = {
         id: Date.now().toString(),
-        type: 'system',
+        author: assistant,
+        type: 'text',
         createdAt: Date.now(),
         text: `🛠 Running tool: ${toolName}\nArguments: ${JSON.stringify(args, null, 2)}`,
       };
@@ -209,9 +211,10 @@ class MCPStore {
         ? result
         : JSON.stringify(result, null, 2);
 
-      const resultMessage: MessageType.System = {
+      const resultMessage: MessageType.Text = {
         id: (Date.now() + 1).toString(),
-        type: 'system',
+        author: assistant,
+        type: 'text',
         createdAt: Date.now() + 1,
         text: `✅ Tool result:\n${resultText}`,
       };
@@ -223,9 +226,10 @@ class MCPStore {
       const errorMsg = error instanceof Error ? error.message : 'Tool execution failed';
 
       // Add error as system message
-      const errorMessage: MessageType.System = {
+      const errorMessage: MessageType.Text = {
         id: (Date.now() + 2).toString(),
-        type: 'system',
+        author: assistant,
+        type: 'text',
         createdAt: Date.now() + 2,
         text: `❌ Tool error: ${errorMsg}`,
       };
