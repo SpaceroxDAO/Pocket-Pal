@@ -466,8 +466,8 @@ export const useChatSession = (
           modelStore.setIsStreaming(false);
           chatSessionStore.setIsGenerating(false);
 
-          // Recursively call handleSubmit with empty message to continue generation
-          await handleSubmit('');
+          // Recursively call handleSendPress with empty message to continue generation
+          await handleSendPress({ text: '' });
           return; // Exit early, the recursive call will handle completion
         }
       }
