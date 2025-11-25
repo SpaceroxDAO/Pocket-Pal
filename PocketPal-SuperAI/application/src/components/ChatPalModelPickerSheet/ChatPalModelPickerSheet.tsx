@@ -493,6 +493,9 @@ export const ChatPalModelPickerSheet = observer(
         renderMcpServerItem,
         renderToolItem,
         l10n.components.chatPalModelPickerSheet,
+        chatSessionStore.activeMcpServerId,
+        mcpStore.tools.length,
+        chatSessionStore.activeSessionEnabledTools.length,
       ],
     );
 
