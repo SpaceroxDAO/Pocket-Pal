@@ -15,7 +15,7 @@ import {useCameraPermission} from 'react-native-vision-camera';
 
 import Color from 'tinycolor2';
 import {observer} from 'mobx-react';
-import {IconButton, Text, Button} from 'react-native-paper';
+import {IconButton, Text, Button, TextInput as PaperTextInput} from 'react-native-paper';
 
 import {PalType} from '../PalsSheets/types';
 
@@ -316,12 +316,15 @@ export const ChatInput = observer(
       }
 
       try {
+        console.log('[ChatInput] handleRunTool - toolArgs state:', toolArgs);
         const args = JSON.parse(toolArgs);
+        console.log('[ChatInput] handleRunTool - parsed args:', JSON.stringify(args));
         await mcpStore.runTool(selectedTool, args, chatSessionStore);
         setShowToolModal(false);
         setSelectedTool(null);
         setToolArgs('{}');
       } catch (error) {
+        console.error('[ChatInput] handleRunTool - error:', error);
         Alert.alert(
           l10n.chatInput?.mcpToolError || 'Tool execution failed',
           error instanceof Error ? error.message : 'Unknown error',
@@ -669,13 +672,17 @@ export const ChatInput = observer(
               <Text variant="labelMedium" style={styles.toolModalLabel}>
                 {l10n.chatInput?.mcpToolArguments || 'Tool Arguments (JSON)'}
               </Text>
-              <TextInput
+              <PaperTextInput
                 value={toolArgs}
-                onChangeText={setToolArgs}
+                onChangeText={(text) => {
+                  console.log('[ChatInput] TextInput onChangeText:', text);
+                  setToolArgs(text);
+                }}
                 multiline
                 numberOfLines={4}
                 style={styles.toolArgsInput}
                 placeholder='{"key": "value"}'
+                mode="outlined"
               />
 
               {/* Actions */}
