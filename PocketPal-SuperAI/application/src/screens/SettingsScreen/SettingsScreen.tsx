@@ -22,7 +22,7 @@ import {useTheme} from '../../hooks';
 
 import {createStyles} from './styles';
 
-import {modelStore, uiStore, hfStore} from '../../store';
+import {modelStore, uiStore, hfStore, mcpStore} from '../../store';
 import {AvailableLanguage} from '../../store/UIStore';
 
 import {L10nContext} from '../../utils';
@@ -74,6 +74,10 @@ export const SettingsScreen: React.FC = observer(() => {
   const keyCacheButtonRef = useRef<View>(null);
   const valueCacheButtonRef = useRef<View>(null);
   const languageButtonRef = useRef<View>(null);
+
+  // MCP state
+  const [mcpServerName, setMcpServerName] = useState('');
+  const [mcpServerUrl, setMcpServerUrl] = useState('');
 
   const debouncedUpdateStore = useRef(
     debounce((value: number) => {
@@ -150,6 +154,49 @@ export const SettingsScreen: React.FC = observer(() => {
       setLanguageAnchor({x: pageX, y: pageY + height});
       setShowLanguageMenu(true);
     });
+  };
+
+  // MCP handlers
+  const handleAddMcpServer = async () => {
+    if (!mcpServerName.trim() || !mcpServerUrl.trim()) {
+      Alert.alert('Error', 'Please enter both server name and URL');
+      return;
+    }
+
+    try {
+      await mcpStore.addServer(mcpServerName.trim(), mcpServerUrl.trim());
+      setMcpServerName('');
+      setMcpServerUrl('');
+      Keyboard.dismiss();
+    } catch (error) {
+      Alert.alert('Error', 'Failed to add MCP server');
+    }
+  };
+
+  const handleConnectMcpServer = async (serverId: string) => {
+    try {
+      await mcpStore.connectToServer(serverId);
+    } catch (error) {
+      Alert.alert(
+        l10n.settings?.mcpConnectionError || 'Connection failed',
+        error instanceof Error ? error.message : 'Unknown error',
+      );
+    }
+  };
+
+  const handleRemoveMcpServer = (serverId: string) => {
+    Alert.alert(
+      l10n.common.delete,
+      'Are you sure you want to remove this server?',
+      [
+        {text: l10n.common.cancel, style: 'cancel'},
+        {
+          text: l10n.common.delete,
+          style: 'destructive',
+          onPress: () => mcpStore.removeServer(serverId),
+        },
+      ],
+    );
   };
 
   const isIOS18OrHigher =
@@ -701,6 +748,119 @@ export const SettingsScreen: React.FC = observer(() => {
                   />
                 </View>
               </View>
+            </Card.Content>
+          </Card>
+
+          {/* MCP Servers */}
+          <Card elevation={0} style={styles.card}>
+            <Card.Title title={l10n.settings?.mcpServersTitle || 'MCP Servers (experimental)'} />
+            <Card.Content>
+              <Text variant="labelSmall" style={styles.textDescription}>
+                {l10n.settings?.mcpServersDescription || 'Connect to Model Context Protocol servers for extended tool capabilities.'}
+              </Text>
+
+              {/* Add Server Form */}
+              <View style={styles.mcpFormContainer}>
+                <TextInput
+                  label={l10n.settings?.mcpServerName || 'Server Name'}
+                  placeholder={l10n.settings?.mcpServerNamePlaceholder || 'My MCP Server'}
+                  value={mcpServerName}
+                  onChangeText={setMcpServerName}
+                  mode="outlined"
+                  style={styles.mcpInput}
+                />
+                <TextInput
+                  label={l10n.settings?.mcpServerUrl || 'WebSocket URL'}
+                  placeholder={l10n.settings?.mcpServerUrlPlaceholder || 'ws://localhost:3000'}
+                  value={mcpServerUrl}
+                  onChangeText={setMcpServerUrl}
+                  mode="outlined"
+                  autoCapitalize="none"
+                  style={styles.mcpInput}
+                />
+                <Button
+                  mode="contained"
+                  onPress={handleAddMcpServer}
+                  disabled={!mcpServerName.trim() || !mcpServerUrl.trim()}
+                  style={styles.mcpAddButton}>
+                  {l10n.settings?.mcpAddServer || 'Add Server'}
+                </Button>
+              </View>
+
+              {/* Server List */}
+              {mcpStore.servers.length === 0 ? (
+                <View style={styles.mcpEmptyState}>
+                  <Text variant="bodyMedium" style={styles.mcpEmptyText}>
+                    {l10n.settings?.mcpNoServers || 'No MCP servers configured'}
+                  </Text>
+                </View>
+              ) : (
+                mcpStore.servers.map(server => {
+                  const isActive = mcpStore.activeServerId === server.id;
+                  const isConnected = isActive && mcpStore.isConnected;
+                  const toolCount = isActive ? mcpStore.tools.length : 0;
+
+                  return (
+                    <View key={server.id} style={styles.mcpServerItem}>
+                      <View style={styles.mcpServerInfo}>
+                        <Text variant="titleMedium">{server.name}</Text>
+                        <Text variant="bodySmall" style={styles.mcpServerUrl}>
+                          {server.url}
+                        </Text>
+                        {isActive && (
+                          <View style={styles.mcpStatusRow}>
+                            <View
+                              style={[
+                                styles.mcpStatusBadge,
+                                isConnected
+                                  ? styles.mcpConnectedBadge
+                                  : styles.mcpDisconnectedBadge,
+                              ]}>
+                              <Text
+                                variant="labelSmall"
+                                style={[
+                                  styles.mcpStatusText,
+                                  isConnected
+                                    ? styles.mcpConnectedText
+                                    : styles.mcpDisconnectedText,
+                                ]}>
+                                {isConnected
+                                  ? (l10n.settings?.mcpConnected || 'Connected')
+                                  : (l10n.settings?.mcpDisconnected || 'Disconnected')}
+                              </Text>
+                            </View>
+                            {isConnected && toolCount > 0 && (
+                              <Text variant="labelSmall" style={styles.mcpToolCount}>
+                                {(l10n.settings?.mcpToolsAvailable || '{{count}} tools available').replace(
+                                  '{{count}}',
+                                  toolCount.toString(),
+                                )}
+                              </Text>
+                            )}
+                          </View>
+                        )}
+                      </View>
+                      <View style={styles.mcpServerActions}>
+                        {!isActive && (
+                          <Button
+                            mode="outlined"
+                            onPress={() => handleConnectMcpServer(server.id)}
+                            disabled={mcpStore.isConnecting}
+                            style={styles.mcpActionButton}>
+                            {l10n.settings?.mcpConnect || 'Connect'}
+                          </Button>
+                        )}
+                        <Button
+                          mode="outlined"
+                          onPress={() => handleRemoveMcpServer(server.id)}
+                          style={styles.mcpActionButton}>
+                          {l10n.settings?.mcpRemove || 'Remove'}
+                        </Button>
+                      </View>
+                    </View>
+                  );
+                })
+              )}
             </Card.Content>
           </Card>
 

@@ -218,4 +218,87 @@ export const createStyles = ({
     inputWithLabel: {
       marginTop: 0,
     },
+    // MCP Tool Styles
+    toolButton: {
+      height: 28,
+      width: 28,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 100,
+      backgroundColor: theme.colors.primaryContainer,
+    },
+    toolButtonText: {
+      fontSize: 16,
+    },
+    toolModalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 16,
+    },
+    toolModalContent: {
+      backgroundColor: theme.colors.surface,
+      borderRadius: 16,
+      padding: 24,
+      width: '100%',
+      maxWidth: 500,
+      maxHeight: '80%',
+    },
+    toolModalTitle: {
+      marginBottom: 16,
+      color: theme.colors.onSurface,
+    },
+    toolModalLabel: {
+      marginTop: 12,
+      marginBottom: 8,
+      color: theme.colors.onSurface,
+    },
+    toolListContainer: {
+      maxHeight: 200,
+      borderWidth: 1,
+      borderColor: theme.colors.outline,
+      borderRadius: 8,
+      padding: 8,
+    },
+    toolItem: {
+      padding: 12,
+      borderRadius: 8,
+      marginBottom: 8,
+      backgroundColor: theme.colors.surfaceVariant,
+    },
+    toolItemSelected: {
+      backgroundColor: theme.colors.primaryContainer,
+    },
+    toolItemName: {
+      color: theme.colors.onSurfaceVariant,
+      fontWeight: '600',
+    },
+    toolItemNameSelected: {
+      color: theme.colors.onPrimaryContainer,
+    },
+    toolItemDescription: {
+      color: theme.colors.onSurfaceVariant,
+      marginTop: 4,
+    },
+    toolArgsInput: {
+      borderWidth: 1,
+      borderColor: theme.colors.outline,
+      borderRadius: 8,
+      padding: 12,
+      fontFamily: 'monospace',
+      fontSize: 12,
+      color: theme.colors.onSurface,
+      backgroundColor: theme.colors.surfaceVariant,
+      minHeight: 100,
+    },
+    toolModalActions: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      gap: 12,
+      marginTop: 16,
+    },
+    toolModalButton: {
+      minWidth: 100,
+    },
   });

@@ -20,7 +20,7 @@ import {
 
 import {fetchModelFilesDetails} from '../api/hf';
 
-import {uiStore, hfStore} from '.';
+import {uiStore, hfStore, mcpStore} from '.';
 import {chatSessionStore} from './ChatSessionStore';
 import {
   deepMerge,
@@ -1095,6 +1095,10 @@ class ModelStore {
           });
         }
       }
+
+      // Dispose MCP client when releasing context
+      mcpStore.disposeActiveClient();
+      console.log('MCP client disposed');
 
       // Then release the main context
       await this.context.release();

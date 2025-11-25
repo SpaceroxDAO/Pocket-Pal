@@ -93,4 +93,75 @@ export const createStyles = (theme: Theme) =>
     menu: {
       width: 170,
     },
+    // MCP Styles
+    mcpFormContainer: {
+      marginTop: 16,
+      gap: 12,
+    },
+    mcpInput: {
+      backgroundColor: theme.colors.surface,
+    },
+    mcpAddButton: {
+      marginTop: 8,
+    },
+    mcpEmptyState: {
+      paddingVertical: 24,
+      alignItems: 'center',
+    },
+    mcpEmptyText: {
+      color: theme.colors.onSurfaceVariant,
+      textAlign: 'center',
+    },
+    mcpServerItem: {
+      marginTop: 16,
+      padding: 12,
+      backgroundColor: theme.colors.surface,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: theme.colors.outline,
+    },
+    mcpServerInfo: {
+      marginBottom: 12,
+    },
+    mcpServerUrl: {
+      color: theme.colors.onSurfaceVariant,
+      marginTop: 4,
+    },
+    mcpStatusRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 8,
+      gap: 8,
+    },
+    mcpStatusBadge: {
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 12,
+    },
+    mcpConnectedBadge: {
+      backgroundColor: theme.colors.primaryContainer,
+    },
+    mcpDisconnectedBadge: {
+      backgroundColor: theme.colors.surfaceVariant,
+    },
+    mcpStatusText: {
+      fontSize: 11,
+      fontWeight: '600',
+    },
+    mcpConnectedText: {
+      color: theme.colors.onPrimaryContainer,
+    },
+    mcpDisconnectedText: {
+      color: theme.colors.onSurfaceVariant,
+    },
+    mcpToolCount: {
+      color: theme.colors.onSurfaceVariant,
+    },
+    mcpServerActions: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    mcpActionButton: {
+      flex: 1,
+    },
   });
