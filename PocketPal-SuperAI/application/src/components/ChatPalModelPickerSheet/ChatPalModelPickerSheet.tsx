@@ -441,6 +441,13 @@ export const ChatPalModelPickerSheet = observer(
       [styles, handleToolToggle],
     );
 
+    // Extract observable values outside the callback for proper MobX reactivity
+    const activeMcpServerId = chatSessionStore.activeMcpServerId;
+    const availableTools = activeMcpServerId
+      ? mcpStore.getToolsForServer(activeMcpServerId)
+      : [];
+    const enabledToolNames = chatSessionStore.activeSessionEnabledTools;
+
     const renderContent = React.useCallback(
       ({item}: {item: (typeof TABS)[0]}) => {
         let content;
@@ -462,7 +469,6 @@ export const ChatPalModelPickerSheet = observer(
             content = [renderDisableMcpItem(), ...mcpStore.servers.map(renderMcpServerItem)];
           }
         } else if (item.id === 'tools') {
-          const activeMcpServerId = chatSessionStore.activeMcpServerId;
           if (!activeMcpServerId) {
             content = (
               <View style={{padding: 20, alignItems: 'center'}}>
@@ -471,19 +477,16 @@ export const ChatPalModelPickerSheet = observer(
                 </Text>
               </View>
             );
+          } else if (availableTools.length === 0) {
+            content = (
+              <View style={{padding: 20, alignItems: 'center'}}>
+                <Text style={styles.itemSubtitle}>
+                  {l10n.components.chatPalModelPickerSheet?.noToolsAvailable || 'No tools available from this MCP server'}
+                </Text>
+              </View>
+            );
           } else {
-            const tools = mcpStore.getToolsForServer(activeMcpServerId);
-            if (tools.length === 0) {
-              content = (
-                <View style={{padding: 20, alignItems: 'center'}}>
-                  <Text style={styles.itemSubtitle}>
-                    {l10n.components.chatPalModelPickerSheet?.noToolsAvailable || 'No tools available from this MCP server'}
-                  </Text>
-                </View>
-              );
-            } else {
-              content = tools.map(renderToolItem);
-            }
+            content = availableTools.map(renderToolItem);
           }
         }
 
@@ -505,9 +508,9 @@ export const ChatPalModelPickerSheet = observer(
         renderMcpServerItem,
         renderToolItem,
         l10n.components.chatPalModelPickerSheet,
-        chatSessionStore.activeMcpServerId,
-        mcpStore.tools.length,
-        chatSessionStore.activeSessionEnabledTools.length,
+        activeMcpServerId,
+        availableTools,
+        enabledToolNames,
       ],
     );
 
