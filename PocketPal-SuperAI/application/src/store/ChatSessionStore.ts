@@ -19,6 +19,9 @@ export interface SessionMetaData {
   messages: MessageType.Any[];
   completionSettings: CompletionParams;
   activePalId?: string;
+  activeMcpServerId?: string;
+  enabledToolNamesJSON?: string;
+  enabledToolNames?: string[];
 }
 
 interface SessionGroup {
@@ -721,6 +724,60 @@ class ChatSessionStore {
       }
     } else {
       this.newChatPalId = palId;
+    }
+  }
+
+  get activeMcpServerId(): string | undefined {
+    if (this.activeSessionId) {
+      const session = this.sessions.find(s => s.id === this.activeSessionId);
+      return session?.activeMcpServerId;
+    }
+    return undefined;
+  }
+
+  async setActiveMcpServer(mcpServerId: string | undefined): Promise<void> {
+    if (this.activeSessionId) {
+      const session = this.sessions.find(s => s.id === this.activeSessionId);
+      if (session) {
+        // Update in database
+        await chatSessionRepository.setSessionActiveMcpServer(
+          this.activeSessionId,
+          mcpServerId,
+        );
+
+        // Update local state
+        runInAction(() => {
+          session.activeMcpServerId = mcpServerId;
+          // Clear enabled tools when changing MCP server
+          session.enabledToolNamesJSON = JSON.stringify([]);
+        });
+      }
+    }
+  }
+
+  get activeSessionEnabledTools(): string[] {
+    if (this.activeSessionId) {
+      const session = this.sessions.find(s => s.id === this.activeSessionId);
+      return session?.enabledToolNames || [];
+    }
+    return [];
+  }
+
+  async setEnabledTools(toolNames: string[]): Promise<void> {
+    if (this.activeSessionId) {
+      const session = this.sessions.find(s => s.id === this.activeSessionId);
+      if (session) {
+        // Update in database
+        await chatSessionRepository.setSessionEnabledTools(
+          this.activeSessionId,
+          toolNames,
+        );
+
+        // Update local state
+        runInAction(() => {
+          session.enabledToolNamesJSON = JSON.stringify(toolNames);
+        });
+      }
     }
   }
 }

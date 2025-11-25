@@ -1,7 +1,7 @@
 import {appSchema, tableSchema} from '@nozbe/watermelondb';
 
 export default appSchema({
-  version: 1,
+  version: 2,
   tables: [
     tableSchema({
       name: 'chat_sessions',
@@ -9,6 +9,8 @@ export default appSchema({
         {name: 'title', type: 'string'},
         {name: 'date', type: 'string'},
         {name: 'active_pal_id', type: 'string', isOptional: true},
+        {name: 'active_mcp_server_id', type: 'string', isOptional: true},
+        {name: 'enabled_tool_names', type: 'string', isOptional: true},
         {name: 'created_at', type: 'number'},
         {name: 'updated_at', type: 'number'},
       ],

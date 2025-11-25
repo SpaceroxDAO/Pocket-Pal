@@ -522,6 +522,48 @@ class ChatSessionRepository {
     });
   }
 
+  // Set active MCP server for a session
+  async setSessionActiveMcpServer(
+    sessionId: string,
+    mcpServerId?: string,
+  ): Promise<void> {
+    const session = await database.collections
+      .get('chat_sessions')
+      .find(sessionId)
+      .catch(() => null);
+
+    if (!session) {
+      return;
+    }
+
+    await database.write(async () => {
+      await session.update((record: any) => {
+        record.activeMcpServerId = mcpServerId || null;
+      });
+    });
+  }
+
+  // Set enabled tools for a session
+  async setSessionEnabledTools(
+    sessionId: string,
+    toolNames: string[],
+  ): Promise<void> {
+    const session = await database.collections
+      .get('chat_sessions')
+      .find(sessionId)
+      .catch(() => null);
+
+    if (!session) {
+      return;
+    }
+
+    await database.write(async () => {
+      await session.update((record: any) => {
+        record.enabledToolNamesJSON = JSON.stringify(toolNames);
+      });
+    });
+  }
+
   // Delete a message by ID
   async deleteMessage(id: string): Promise<void> {
     const message = await database.collections

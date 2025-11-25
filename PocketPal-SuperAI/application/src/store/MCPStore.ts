@@ -289,6 +289,45 @@ class MCPStore {
   clearLogs(): void {
     this.logs = [];
   }
+
+  /**
+   * Get list of connected servers
+   */
+  get connectedServers(): MCPServer[] {
+    return this.servers.filter(server => {
+      // For now, just return all servers
+      // In the future, we could track connection status per server
+      return true;
+    });
+  }
+
+  /**
+   * Get tools for a specific server
+   * Note: Currently only supports active server
+   */
+  getToolsForServer(serverId: string): MCPTool[] {
+    if (serverId === this.activeServerId) {
+      return this.tools;
+    }
+    return [];
+  }
+
+  /**
+   * Get enabled tools for a session based on its configuration
+   */
+  getEnabledToolsForSession(session: {
+    activeMcpServerId?: string;
+    enabledToolNames?: string[];
+  }): MCPTool[] {
+    if (!session.activeMcpServerId) {
+      return [];
+    }
+
+    const allTools = this.getToolsForServer(session.activeMcpServerId);
+    const enabledNames = session.enabledToolNames || [];
+
+    return allTools.filter(tool => enabledNames.includes(tool.name));
+  }
 }
 
 export const mcpStore = new MCPStore();
