@@ -18,7 +18,7 @@ import {getModelSkills, L10nContext, Model} from '../../utils';
 import {CloseIcon} from '../../assets/icons';
 import {PalType} from '../PalsSheets/types';
 import {SkillsDisplay} from '../SkillsDisplay';
-import {Checkbox} from 'react-native-paper';
+import {Checkbox, Snackbar, ActivityIndicator} from 'react-native-paper';
 
 type Tab = 'models' | 'pals' | 'mcp' | 'tools';
 
@@ -79,6 +79,9 @@ export const ChatPalModelPickerSheet = observer(
     keyboardHeight,
   }: ChatPalModelPickerSheetProps) => {
     const [activeTab, setActiveTab] = React.useState<Tab>('models');
+    const [connectingMcpServer, setConnectingMcpServer] = React.useState(false);
+    const [snackbarVisible, setSnackbarVisible] = React.useState(false);
+    const [snackbarMessage, setSnackbarMessage] = React.useState('');
     const theme = useTheme();
     const l10n = useContext(L10nContext);
     // const insets = useSafeAreaInsets();
@@ -307,31 +310,34 @@ export const ChatPalModelPickerSheet = observer(
 
     const handleMcpServerSelect = React.useCallback(
       async (serverId: string | undefined) => {
-        await chatSessionStore.setActiveMcpServer(serverId);
-
-        // Connect to the selected MCP server to populate tools
         if (serverId) {
+          setConnectingMcpServer(true);
+
           try {
+            await chatSessionStore.setActiveMcpServer(serverId);
             await mcpStore.connectToServer(serverId);
-            // After successful connection, switch to Tools tab so user can select tools
-            setActiveTab('tools');
-            flatListRef.current?.scrollToIndex({
-              index: 3, // Tools tab is at index 3
-              animated: true,
-            });
+
+            const toolCount = mcpStore.tools.length;
+            setSnackbarMessage(`Connected! Discovered ${toolCount} tool${toolCount !== 1 ? 's' : ''}.`);
+            setSnackbarVisible(true);
           } catch (error) {
             console.error('[ChatPalModelPickerSheet] Failed to connect to MCP server:', error);
             Alert.alert(
               'Connection Failed',
               `Could not connect to MCP server: ${error instanceof Error ? error.message : 'Unknown error'}`,
             );
+          } finally {
+            setConnectingMcpServer(false);
           }
         } else {
           // If deselecting, dispose of the active client
+          await chatSessionStore.setActiveMcpServer(undefined);
           mcpStore.disposeActiveClient();
+          setSnackbarMessage('MCP server disconnected');
+          setSnackbarVisible(true);
         }
 
-        // Don't close modal - let user continue to select tools
+        // Don't close modal or switch tabs - let user manually go to Tools tab
       },
       [],
     );
@@ -367,11 +373,14 @@ export const ChatPalModelPickerSheet = observer(
     const renderMcpServerItem = React.useCallback(
       (server: (typeof mcpStore.servers)[0]) => {
         const isActiveServer = server.id === chatSessionStore.activeMcpServerId;
+        const isConnecting = connectingMcpServer && server.id === chatSessionStore.activeMcpServerId;
+
         return (
           <Pressable
             key={server.id}
             style={[styles.listItem, isActiveServer && styles.activeListItem]}
-            onPress={() => handleMcpServerSelect(server.id)}>
+            onPress={() => handleMcpServerSelect(server.id)}
+            disabled={connectingMcpServer}>
             <View style={styles.itemContent}>
               <Text
                 style={[
@@ -385,13 +394,16 @@ export const ChatPalModelPickerSheet = observer(
                   styles.itemSubtitle,
                   isActiveServer && styles.activeItemSubtitle,
                 ]}>
-                {server.url}
+                {isConnecting ? 'Discovering tools...' : server.url}
               </Text>
             </View>
+            {isConnecting && (
+              <ActivityIndicator size="small" color={theme.colors.primary} />
+            )}
           </Pressable>
         );
       },
-      [styles, handleMcpServerSelect],
+      [styles, handleMcpServerSelect, connectingMcpServer, theme.colors.primary],
     );
 
     const handleToolToggle = React.useCallback(
@@ -517,46 +529,56 @@ export const ChatPalModelPickerSheet = observer(
     const snapPoints = React.useMemo(() => ['70%'], []);
 
     return (
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        onClose={onClose}
-        enablePanDownToClose
-        snapPoints={snapPoints} // Dynamic sizing is not working properly in all situations, like keyboard open/close android/ios ...
-        enableDynamicSizing={false}
-        backdropComponent={isVisible ? CustomBackdrop : null} // on android we need this check to ensure it doenst' block interaction
-        backgroundStyle={{
-          backgroundColor: theme.colors.background,
-        }}
-        // Dynamic sizing is not working properly in all situations, like keyboard open/close android/ios ...
-        //maxDynamicContentSize={
-        //  Dimensions.get('screen').height - insets.top - 16 - keyboardHeight
-        //}
-        handleIndicatorStyle={{
-          backgroundColor: theme.colors.primary,
-        }}
-        // Add these props to better handle gestures
-        enableContentPanningGesture={false}
-        enableHandlePanningGesture>
-        <BottomSheetView>
-          <View style={styles.tabs}>
-            {TABS.map((tab, index) => renderTab(tab.id, tab.label, index))}
-          </View>
-          <BottomSheetFlatList
-            ref={flatListRef}
-            data={TABS}
-            renderItem={renderContent}
-            bounces={false}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={item => item.id}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onViewableItemsChanged={onViewableItemsChanged}
-            viewabilityConfig={viewabilityConfig}
-          />
-        </BottomSheetView>
-      </BottomSheet>
+      <>
+        <BottomSheet
+          ref={bottomSheetRef}
+          index={-1}
+          onClose={onClose}
+          enablePanDownToClose
+          snapPoints={snapPoints} // Dynamic sizing is not working properly in all situations, like keyboard open/close android/ios ...
+          enableDynamicSizing={false}
+          backdropComponent={isVisible ? CustomBackdrop : null} // on android we need this check to ensure it doenst' block interaction
+          backgroundStyle={{
+            backgroundColor: theme.colors.background,
+          }}
+          // Dynamic sizing is not working properly in all situations, like keyboard open/close android/ios ...
+          //maxDynamicContentSize={
+          //  Dimensions.get('screen').height - insets.top - 16 - keyboardHeight
+          //}
+          handleIndicatorStyle={{
+            backgroundColor: theme.colors.primary,
+          }}
+          // Add these props to better handle gestures
+          enableContentPanningGesture={false}
+          enableHandlePanningGesture>
+          <BottomSheetView>
+            <View style={styles.tabs}>
+              {TABS.map((tab, index) => renderTab(tab.id, tab.label, index))}
+            </View>
+            <BottomSheetFlatList
+              ref={flatListRef}
+              data={TABS}
+              renderItem={renderContent}
+              bounces={false}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={item => item.id}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onViewableItemsChanged={onViewableItemsChanged}
+              viewabilityConfig={viewabilityConfig}
+            />
+          </BottomSheetView>
+        </BottomSheet>
+
+        <Snackbar
+          visible={snackbarVisible}
+          onDismiss={() => setSnackbarVisible(false)}
+          duration={3000}
+          style={{marginBottom: chatInputHeight + 20}}>
+          {snackbarMessage}
+        </Snackbar>
+      </>
     );
   },
 );
