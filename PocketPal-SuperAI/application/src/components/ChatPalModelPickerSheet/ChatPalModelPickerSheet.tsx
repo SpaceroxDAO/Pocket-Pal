@@ -308,9 +308,32 @@ export const ChatPalModelPickerSheet = observer(
     const handleMcpServerSelect = React.useCallback(
       async (serverId: string | undefined) => {
         await chatSessionStore.setActiveMcpServer(serverId);
-        onClose();
+
+        // Connect to the selected MCP server to populate tools
+        if (serverId) {
+          try {
+            await mcpStore.connectToServer(serverId);
+            // After successful connection, switch to Tools tab so user can select tools
+            setActiveTab('tools');
+            flatListRef.current?.scrollToIndex({
+              index: 3, // Tools tab is at index 3
+              animated: true,
+            });
+          } catch (error) {
+            console.error('[ChatPalModelPickerSheet] Failed to connect to MCP server:', error);
+            Alert.alert(
+              'Connection Failed',
+              `Could not connect to MCP server: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            );
+          }
+        } else {
+          // If deselecting, dispose of the active client
+          mcpStore.disposeActiveClient();
+        }
+
+        // Don't close modal - let user continue to select tools
       },
-      [onClose],
+      [],
     );
 
     const renderDisableMcpItem = React.useCallback(() => {
