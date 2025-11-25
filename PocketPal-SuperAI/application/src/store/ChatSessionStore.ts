@@ -736,6 +736,15 @@ class ChatSessionStore {
   }
 
   async setActiveMcpServer(mcpServerId: string | undefined): Promise<void> {
+    // If no active session exists, create one first
+    if (!this.activeSessionId) {
+      await this.createNewSession(
+        NEW_SESSION_TITLE,
+        [],
+        {...this.newChatCompletionSettings},
+      );
+    }
+
     if (this.activeSessionId) {
       const sessionIndex = this.sessions.findIndex(s => s.id === this.activeSessionId);
       if (sessionIndex !== -1) {
