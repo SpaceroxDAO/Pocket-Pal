@@ -358,9 +358,13 @@ export const useChatSession = (
       }
 
       // Enhance system prompt with MCP tool schemas if tools are available
-      const availableTools = toJS(mcpStore.tools);
+      // Only include tools that are enabled for this session
+      const currentSession = chatSessionStore.sessions.find(s => s.id === chatSessionStore.activeSessionId);
+      const availableTools = currentSession
+        ? toJS(mcpStore.getEnabledToolsForSession(currentSession))
+        : [];
       if (availableTools && availableTools.length > 0) {
-        console.log('[useChatSession] Enhancing system prompt with', availableTools.length, 'tools');
+        console.log('[useChatSession] Enhancing system prompt with', availableTools.length, 'enabled tools');
         finalSystemPrompt = buildSystemPromptWithTools(finalSystemPrompt, availableTools);
       }
 
@@ -426,6 +430,13 @@ export const useChatSession = (
           for (const toolCall of toolCalls) {
             try {
               console.log('[useChatSession] Executing tool:', toolCall.name, toolCall.arguments);
+
+              // Check if the tool is enabled for this session
+              const enabledTools = chatSessionStore.activeSessionEnabledTools;
+              if (!enabledTools.includes(toolCall.name)) {
+                console.warn('[useChatSession] Tool not enabled for this session:', toolCall.name);
+                throw new Error(`Tool "${toolCall.name}" is not enabled for this session`);
+              }
 
               // Execute the tool via MCPStore
               const result = await mcpStore.activeClient?.callTool(

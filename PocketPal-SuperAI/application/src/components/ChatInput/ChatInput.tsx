@@ -8,14 +8,13 @@ import {
   Alert,
   ScrollView,
   Image,
-  Modal,
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {useCameraPermission} from 'react-native-vision-camera';
 
 import Color from 'tinycolor2';
 import {observer} from 'mobx-react';
-import {IconButton, Text, Button, TextInput as PaperTextInput} from 'react-native-paper';
+import {IconButton, Text} from 'react-native-paper';
 
 import {PalType} from '../PalsSheets/types';
 
@@ -135,11 +134,6 @@ export const ChatInput = observer(
     // State for image upload menu
     const [showImageUploadMenu, setShowImageUploadMenu] = React.useState(false);
     const isEditMode = chatSessionStore.isEditMode;
-
-    // MCP tool modal state
-    const [showToolModal, setShowToolModal] = React.useState(false);
-    const [selectedTool, setSelectedTool] = React.useState<string | null>(null);
-    const [toolArgs, setToolArgs] = React.useState('{}');
 
     const styles = createStyles({theme, isEditMode});
 
@@ -295,41 +289,6 @@ export const ChatInput = observer(
     const handleCancel = () => {
       setText('');
       onCancelEdit?.();
-    };
-
-    // MCP Tool handlers
-    const handleToolButtonPress = () => {
-      if (mcpStore.tools.length === 0) {
-        Alert.alert(
-          l10n.chatInput?.mcpToolsModalTitle || 'Run MCP Tool',
-          l10n.chatInput?.mcpNoToolsAvailable || 'No tools available. Connect to an MCP server in Settings.',
-        );
-        return;
-      }
-      setShowToolModal(true);
-    };
-
-    const handleRunTool = async () => {
-      if (!selectedTool) {
-        Alert.alert('Error', l10n.chatInput?.mcpSelectTool || 'Select a tool');
-        return;
-      }
-
-      try {
-        console.log('[ChatInput] handleRunTool - toolArgs state:', toolArgs);
-        const args = JSON.parse(toolArgs);
-        console.log('[ChatInput] handleRunTool - parsed args:', JSON.stringify(args));
-        await mcpStore.runTool(selectedTool, args, chatSessionStore);
-        setShowToolModal(false);
-        setSelectedTool(null);
-        setToolArgs('{}');
-      } catch (error) {
-        console.error('[ChatInput] handleRunTool - error:', error);
-        Alert.alert(
-          l10n.chatInput?.mcpToolError || 'Tool execution failed',
-          error instanceof Error ? error.message : 'Unknown error',
-        );
-      }
     };
 
     const isSendButtonVisible =
@@ -506,20 +465,6 @@ export const ChatInput = observer(
                   </Menu>
                 )}
 
-              {/* MCP Tool Button */}
-              {mcpStore.tools.length > 0 &&
-                !isStreaming &&
-                !isStopVisible &&
-                palType !== PalType.VIDEO && (
-                  <TouchableOpacity
-                    style={styles.toolButton}
-                    onPress={handleToolButtonPress}
-                    accessibilityLabel="Tools"
-                    accessibilityRole="button">
-                    <Text style={styles.toolButtonText}>🛠</Text>
-                  </TouchableOpacity>
-                )}
-
               {/* Pal Selector */}
               <View style={styles.palSelector}>
                 <TouchableOpacity
@@ -619,91 +564,6 @@ export const ChatInput = observer(
             </View>
           </View>
         </View>
-
-        {/* MCP Tool Modal */}
-        <Modal
-          visible={showToolModal}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setShowToolModal(false)}>
-          <TouchableOpacity
-            style={styles.toolModalOverlay}
-            activeOpacity={1}
-            onPress={() => setShowToolModal(false)}>
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={(e) => e.stopPropagation()}
-              style={styles.toolModalContent}>
-              <Text variant="titleLarge" style={styles.toolModalTitle}>
-                {l10n.chatInput?.mcpToolsModalTitle || 'Run MCP Tool'}
-              </Text>
-
-              {/* Tool Selector */}
-              <Text variant="labelMedium" style={styles.toolModalLabel}>
-                {l10n.chatInput?.mcpSelectTool || 'Select a tool'}
-              </Text>
-              <ScrollView style={styles.toolListContainer}>
-                {mcpStore.tools.map(tool => (
-                  <TouchableOpacity
-                    key={tool.name}
-                    style={[
-                      styles.toolItem,
-                      selectedTool === tool.name && styles.toolItemSelected,
-                    ]}
-                    onPress={() => setSelectedTool(tool.name)}>
-                    <Text
-                      variant="titleSmall"
-                      style={[
-                        styles.toolItemName,
-                        selectedTool === tool.name && styles.toolItemNameSelected,
-                      ]}>
-                      {tool.name}
-                    </Text>
-                    {tool.description && (
-                      <Text variant="bodySmall" style={styles.toolItemDescription}>
-                        {tool.description}
-                      </Text>
-                    )}
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-
-              {/* Arguments Input */}
-              <Text variant="labelMedium" style={styles.toolModalLabel}>
-                {l10n.chatInput?.mcpToolArguments || 'Tool Arguments (JSON)'}
-              </Text>
-              <PaperTextInput
-                value={toolArgs}
-                onChangeText={(text) => {
-                  console.log('[ChatInput] TextInput onChangeText:', text);
-                  setToolArgs(text);
-                }}
-                multiline
-                numberOfLines={4}
-                style={styles.toolArgsInput}
-                placeholder='{"key": "value"}'
-                mode="outlined"
-              />
-
-              {/* Actions */}
-              <View style={styles.toolModalActions}>
-                <Button
-                  mode="outlined"
-                  onPress={() => setShowToolModal(false)}
-                  style={styles.toolModalButton}>
-                  {l10n.common.cancel}
-                </Button>
-                <Button
-                  mode="contained"
-                  onPress={handleRunTool}
-                  disabled={!selectedTool}
-                  style={styles.toolModalButton}>
-                  {l10n.chatInput?.mcpRunTool || 'Run Tool'}
-                </Button>
-              </View>
-            </TouchableOpacity>
-          </TouchableOpacity>
-        </Modal>
       </View>
     );
   },

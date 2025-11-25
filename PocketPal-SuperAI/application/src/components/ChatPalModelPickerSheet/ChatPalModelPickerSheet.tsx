@@ -11,15 +11,16 @@ import BottomSheet, {
 
 import {useTheme} from '../../hooks';
 import {createStyles} from './styles';
-import {modelStore, palStore, chatSessionStore} from '../../store';
+import {modelStore, palStore, chatSessionStore, mcpStore} from '../../store';
 import {CustomBackdrop} from '../Sheet/CustomBackdrop';
 import {getModelSkills, L10nContext, Model} from '../../utils';
 //import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CloseIcon} from '../../assets/icons';
 import {PalType} from '../PalsSheets/types';
 import {SkillsDisplay} from '../SkillsDisplay';
+import {Checkbox} from 'react-native-paper';
 
-type Tab = 'models' | 'pals';
+type Tab = 'models' | 'pals' | 'mcp' | 'tools';
 
 interface ChatPalModelPickerSheetProps {
   isVisible: boolean;
@@ -95,10 +96,20 @@ export const ChatPalModelPickerSheet = observer(
           id: 'pals' as Tab,
           label: l10n.components.chatPalModelPickerSheet.palsTab,
         },
+        {
+          id: 'mcp' as Tab,
+          label: l10n.components.chatPalModelPickerSheet?.mcpTab || 'MCP',
+        },
+        {
+          id: 'tools' as Tab,
+          label: l10n.components.chatPalModelPickerSheet?.toolsTab || 'Tools',
+        },
       ],
       [
         l10n.components.chatPalModelPickerSheet.modelsTab,
         l10n.components.chatPalModelPickerSheet.palsTab,
+        l10n.components.chatPalModelPickerSheet?.mcpTab,
+        l10n.components.chatPalModelPickerSheet?.toolsTab,
       ],
     );
 
@@ -294,18 +305,172 @@ export const ChatPalModelPickerSheet = observer(
       ],
     );
 
+    const handleMcpServerSelect = React.useCallback(
+      async (serverId: string | undefined) => {
+        await chatSessionStore.setActiveMcpServer(serverId);
+        onClose();
+      },
+      [onClose],
+    );
+
+    const renderDisableMcpItem = React.useCallback(() => {
+      const noActiveMcp = !chatSessionStore.activeMcpServerId;
+      if (noActiveMcp) {
+        return null;
+      }
+      return (
+        <Pressable
+          key="disable-mcp"
+          style={styles.listItem}
+          onPress={() => handleMcpServerSelect(undefined)}>
+          <CloseIcon stroke={theme.colors.onSurface} />
+          <View style={styles.itemContent}>
+            <Text style={styles.itemTitle}>
+              {l10n.components.chatPalModelPickerSheet?.noMcp || 'No MCP Server'}
+            </Text>
+            <Text style={styles.itemSubtitle}>
+              {l10n.components.chatPalModelPickerSheet?.disableMcp || 'Disable MCP integration'}
+            </Text>
+          </View>
+        </Pressable>
+      );
+    }, [
+      styles,
+      theme.colors.onSurface,
+      l10n.components.chatPalModelPickerSheet,
+      handleMcpServerSelect,
+    ]);
+
+    const renderMcpServerItem = React.useCallback(
+      (server: (typeof mcpStore.servers)[0]) => {
+        const isActiveServer = server.id === chatSessionStore.activeMcpServerId;
+        return (
+          <Pressable
+            key={server.id}
+            style={[styles.listItem, isActiveServer && styles.activeListItem]}
+            onPress={() => handleMcpServerSelect(server.id)}>
+            <View style={styles.itemContent}>
+              <Text
+                style={[
+                  styles.itemTitle,
+                  isActiveServer && styles.activeItemTitle,
+                ]}>
+                {server.name}
+              </Text>
+              <Text
+                style={[
+                  styles.itemSubtitle,
+                  isActiveServer && styles.activeItemSubtitle,
+                ]}>
+                {server.url}
+              </Text>
+            </View>
+          </Pressable>
+        );
+      },
+      [styles, handleMcpServerSelect],
+    );
+
+    const handleToolToggle = React.useCallback(
+      async (toolName: string, enabled: boolean) => {
+        const currentTools = chatSessionStore.activeSessionEnabledTools;
+        const newTools = enabled
+          ? [...currentTools, toolName]
+          : currentTools.filter(t => t !== toolName);
+        await chatSessionStore.setEnabledTools(newTools);
+      },
+      [],
+    );
+
+    const renderToolItem = React.useCallback(
+      (tool: (typeof mcpStore.tools)[0]) => {
+        const isEnabled = chatSessionStore.activeSessionEnabledTools.includes(tool.name);
+        return (
+          <Pressable
+            key={tool.name}
+            style={styles.listItem}
+            onPress={() => handleToolToggle(tool.name, !isEnabled)}>
+            <View style={styles.itemContent}>
+              <Text style={styles.itemTitle}>{tool.name}</Text>
+              {tool.description && (
+                <Text style={styles.itemSubtitle}>{tool.description}</Text>
+              )}
+            </View>
+            <Checkbox
+              status={isEnabled ? 'checked' : 'unchecked'}
+              onPress={() => handleToolToggle(tool.name, !isEnabled)}
+            />
+          </Pressable>
+        );
+      },
+      [styles, handleToolToggle],
+    );
+
     const renderContent = React.useCallback(
-      ({item}: {item: (typeof TABS)[0]}) => (
-        <View style={{width: Dimensions.get('window').width}}>
-          <BottomSheetScrollView
-            contentContainerStyle={{paddingBottom: chatInputHeight + 66}}>
-            {item.id === 'models'
-              ? modelStore.availableModels.map(renderModelItem)
-              : [renderDisablePalItem(), ...palStore.pals.map(renderPalItem)]}
-          </BottomSheetScrollView>
-        </View>
-      ),
-      [chatInputHeight, renderDisablePalItem, renderModelItem, renderPalItem],
+      ({item}: {item: (typeof TABS)[0]}) => {
+        let content;
+
+        if (item.id === 'models') {
+          content = modelStore.availableModels.map(renderModelItem);
+        } else if (item.id === 'pals') {
+          content = [renderDisablePalItem(), ...palStore.pals.map(renderPalItem)];
+        } else if (item.id === 'mcp') {
+          if (mcpStore.servers.length === 0) {
+            content = (
+              <View style={{padding: 20, alignItems: 'center'}}>
+                <Text style={styles.itemSubtitle}>
+                  {l10n.components.chatPalModelPickerSheet?.noMcpServers || 'No MCP servers configured. Add one in Settings.'}
+                </Text>
+              </View>
+            );
+          } else {
+            content = [renderDisableMcpItem(), ...mcpStore.servers.map(renderMcpServerItem)];
+          }
+        } else if (item.id === 'tools') {
+          const activeMcpServerId = chatSessionStore.activeMcpServerId;
+          if (!activeMcpServerId) {
+            content = (
+              <View style={{padding: 20, alignItems: 'center'}}>
+                <Text style={styles.itemSubtitle}>
+                  {l10n.components.chatPalModelPickerSheet?.selectMcpFirst || 'Select an MCP server first'}
+                </Text>
+              </View>
+            );
+          } else {
+            const tools = mcpStore.getToolsForServer(activeMcpServerId);
+            if (tools.length === 0) {
+              content = (
+                <View style={{padding: 20, alignItems: 'center'}}>
+                  <Text style={styles.itemSubtitle}>
+                    {l10n.components.chatPalModelPickerSheet?.noToolsAvailable || 'No tools available from this MCP server'}
+                  </Text>
+                </View>
+              );
+            } else {
+              content = tools.map(renderToolItem);
+            }
+          }
+        }
+
+        return (
+          <View style={{width: Dimensions.get('window').width}}>
+            <BottomSheetScrollView
+              contentContainerStyle={{paddingBottom: chatInputHeight + 66}}>
+              {content}
+            </BottomSheetScrollView>
+          </View>
+        );
+      },
+      [
+        chatInputHeight,
+        renderDisablePalItem,
+        renderModelItem,
+        renderPalItem,
+        renderDisableMcpItem,
+        renderMcpServerItem,
+        renderToolItem,
+        l10n.components.chatPalModelPickerSheet,
+      ],
     );
 
     const onViewableItemsChanged = React.useCallback(
