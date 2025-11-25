@@ -737,19 +737,25 @@ class ChatSessionStore {
 
   async setActiveMcpServer(mcpServerId: string | undefined): Promise<void> {
     if (this.activeSessionId) {
-      const session = this.sessions.find(s => s.id === this.activeSessionId);
-      if (session) {
+      const sessionIndex = this.sessions.findIndex(s => s.id === this.activeSessionId);
+      if (sessionIndex !== -1) {
+        const session = this.sessions[sessionIndex];
+
         // Update in database
         await chatSessionRepository.setSessionActiveMcpServer(
           this.activeSessionId,
           mcpServerId,
         );
 
-        // Update local state
+        // Update local state - replace entire object for MobX reactivity
         runInAction(() => {
-          session.activeMcpServerId = mcpServerId;
-          // Clear enabled tools when changing MCP server
-          session.enabledToolNamesJSON = JSON.stringify([]);
+          this.sessions[sessionIndex] = {
+            ...session,
+            activeMcpServerId: mcpServerId,
+            // Clear enabled tools when changing MCP server
+            enabledToolNamesJSON: JSON.stringify([]),
+            enabledToolNames: [],
+          };
         });
       }
     }
@@ -765,17 +771,23 @@ class ChatSessionStore {
 
   async setEnabledTools(toolNames: string[]): Promise<void> {
     if (this.activeSessionId) {
-      const session = this.sessions.find(s => s.id === this.activeSessionId);
-      if (session) {
+      const sessionIndex = this.sessions.findIndex(s => s.id === this.activeSessionId);
+      if (sessionIndex !== -1) {
+        const session = this.sessions[sessionIndex];
+
         // Update in database
         await chatSessionRepository.setSessionEnabledTools(
           this.activeSessionId,
           toolNames,
         );
 
-        // Update local state
+        // Update local state - replace entire object for MobX reactivity
         runInAction(() => {
-          session.enabledToolNamesJSON = JSON.stringify(toolNames);
+          this.sessions[sessionIndex] = {
+            ...session,
+            enabledToolNamesJSON: JSON.stringify(toolNames),
+            enabledToolNames: toolNames,
+          };
         });
       }
     }
